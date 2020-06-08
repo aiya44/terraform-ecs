@@ -1,0 +1,3 @@
+___________________________________________________________________________________________________
+PLATFORM 
+--for the ecs cluster to hold the fargate application we are going to need an application load balancer to serve the traffic and balance the load of the service 

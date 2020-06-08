@@ -1,0 +1,25 @@
+INFRASTRUCTURE
+
+1. define the back-end configuration for our terraform remote state. make a folder called 1-infrustructure. 
+--we will have 3 layers: 
+    1. layer is infrastructure - define vpc and networking configuration for our subnets, security groups ...
+    2. layer is the platform layer - where we define the ecs cluster, route 53 domain and everything inbetween 
+    3. application layer where we define our task definition, fatgate application, everything related to the application
+
+
+2. completed 1-infrustructure, executing terraform. 
+-create production.tfvars file: in this file we are going to pass in the variables for the things that are missing within the variables.tf file
+$ cd 1-infrastructure
+-- backend is now being initialized by terraform 
+$ terraform init -backend-config="infrastructure-prod.config" 
+
+3. creating outputs.tf 
+-- output some variables to the terraform roots state so that you can use them from the upper infrastructure layers 
+-- first execute a plan so that we can see whats going to happen once we execute this terraform 
+$ terraform plan -var-file="production.tfvars"
+
+4. apply the following to our aws resources, and execute the plan 
+$ terraform apply -var-file="production.tfvars"
+
+
+
