@@ -9,7 +9,7 @@ terraform {
 data "terraform_remote_state" "infrastructure" {
   backend = "s3"
 
-  config {
+  config = {
     region = var.region
     bucket = var.remote_state_bucket
     key    = var.remote_state_key
@@ -23,7 +23,7 @@ resource "aws_ecs_cluster" "production-fargate-cluster" {
 resource "aws_alb" "ecs_cluster_alb" {
   name            = "${var.ecs_cluster_name}-ALB"
   internal        = false
-  security_groups = aws_security_group.ecs_alb_security_group.id
+  security_groups = [aws_security_group.ecs_alb_security_group.id]
   subnets = split(
     ",",
     join(
@@ -43,7 +43,7 @@ resource "aws_alb_listener" "ecs_alb_https_listener" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
   # bind the https listener with an certificate from aws 
-  certificate_arn = aws_acm_certificate.ecs_domain_name.arn
+  certificate_arn = aws_acm_certificate.ecs_domain_certificate.arn
 
   default_action {
     type             = "forward"
@@ -59,8 +59,8 @@ resource "aws_alb_target_group" "ecs_default_target_group" {
   name     = "${var.ecs_cluster_name}-TG"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = data.terraform_remote_state.infrastructure.vpc_id
-  tags {
+  vpc_id   = data.terraform_remote_state.infrastructure.outputs.vpc_id
+  tags = {
     Name = "${var.ecs_cluster_name}-TG"
   }
 

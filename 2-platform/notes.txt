@@ -1,3 +1,15 @@
 ___________________________________________________________________________________________________
 PLATFORM 
 --for the ecs cluster to hold the fargate application we are going to need an application load balancer to serve the traffic and balance the load of the service 
+
+1. go into the directory for platform and initate terraform 
+$terraform init -backend-config="platform-prod.config" 
+
+
+2. execute a plan 
+$ terraform apply -var-file="production.tfvars"
+
+-- THERE ARE 4 RECORDS SET FOR THE DOMAIN ( UMEIBEAUTY.COM),we have the Cname record thats overriden by terraform that we provided with allow our right parameter  
+-- also we have the Alb alias record for this domain 
+--the types NS and SOA are values for aws to route to the domain properly 
+--ecs-alb 
