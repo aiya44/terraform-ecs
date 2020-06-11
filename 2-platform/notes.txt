@@ -13,3 +13,6 @@ $ terraform apply -var-file="production.tfvars"
 -- also we have the Alb alias record for this domain 
 --the types NS and SOA are values for aws to route to the domain properly 
 --ecs-alb 
+
+3. to destory a infrastructure set up by terraform 
+$terraform destory -var-file="production.tfvars"
