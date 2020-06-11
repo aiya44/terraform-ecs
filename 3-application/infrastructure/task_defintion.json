@@ -1,0 +1,8 @@
+[
+    {
+        "name":"${task_defintion_name}", 
+        "image" : "${docker_image_url}",
+        "essential":true
+        
+    }
+]
