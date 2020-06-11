@@ -15,3 +15,18 @@ data "terraform_remote_state" "platform"{
         region = var.region 
     }
 }
+
+data "template_file" "ecs_task_defintion_template" {
+    template = "${file("task_defintion.json")}"
+
+    vars = {
+        task_defintion_name = var.ecs_service_name
+        ecs_service_name = var.ecs_service_name
+        docker_image_url = var.docker_image_url
+        memory = var.memory 
+        docker_container_port = var.docker_container_port
+        spring_profile = var.spring_profile 
+        region = var.region
+    }
+}
+
