@@ -112,9 +112,9 @@ resource "aws_security_group" "app_security_group" {
 
 resource "aws_alb_target_group" "ecs_app_target_group" {
     name = "${var.ecs_service_name}-TG"
-    port = "${var.docker_container_port}"
+    port = var.docker_container_port
     protocol = "HTTP"
-    vpc_id = "${data.terraform_remote_state.platform.vpc_id}"
+    vpc_id = data.terraform_remote_state.platform.vpc_id
     target_type = "ip"
   
     #providing a health check mechanism for the application so that EC@ target groups can 
@@ -138,3 +138,41 @@ resource "aws_alb_target_group" "ecs_app_target_group" {
 }
 
 #creating ecs service 
+resource "aws_ecs_service" "ecs_service" {
+name = var.ecs_service_name
+task_defintion = var.ecs_service_name
+desired_count = var.desired_task_number
+cluster = data.terraform_remote_state.platform.ecs_cluster_name
+launch_type = "FARGATE"
+
+network_configuration {
+    subnets = [data.terraform_remote_state.platform.ecs_public_subnets]
+    security_groups = [aws_security_group.app_security_group.id]
+    assign_public_ip = true 
+}
+load_balancer {
+    container_name = var.ecs_service_name
+    #providing the docker contianer port 
+    container_port = var.docker_container_port 
+    target_group_arn = aws_alb_target_group.ecs_app_target_group.arn 
+}
+}
+
+#ALB listener rule for ecs service - so we can attach our target group to the load balancer and to the actual listener rule 
+resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
+    listener_arn = data.terraform_remote_state.platform.ecs_alb_listener_arn
+     
+    action {
+        type = "forward"
+        target_group_arn = aws_alb_target_group.ecs_app_target_group.arn
+    }
+
+    condition {
+        field = "host-header"
+        #this is goign to put the service name infront of the domain and basically going to create a subdomain of my application so that it could be reach from the load balancer
+        values = ["${lower(var.ecs_service_name)}.${data.terraform_remote_state.platform.outputs.ecs_domain_name}"]
+    }
+
+}
+
+#cloudwatch loggroup 
