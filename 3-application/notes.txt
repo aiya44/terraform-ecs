@@ -12,4 +12,13 @@
 2. now we are going to read the .json file as a template file in terraform and pass init it the variables we have created in the .json file as place holders, so that 
 task defintion JSOn can be resolved before pushed into the AWS as an actual definition 
 
-3. in the app.tf - we provided s3 backend and then we implemented remote state reading for our pla
+3. in the app.tf - we provided s3 backend and then we implemented remote state reading for our platform configuration 
+
+4. next for the app.tf ( template-file) to read the task_defintion.json file and reder it with the variables that we will be passing into the task_defintion 
+
+________________________________________________________________________________________________
+implementing the stadges for the pipeline 
+1. dockerize the application ( dockerfile)
+
+2. creatring a shell script for Deployment that we can execute easily for any of the stages that we're going to implement (deploy.sh) 
+
