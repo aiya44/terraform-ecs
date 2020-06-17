@@ -1,12 +1,15 @@
 -- the application layer we are going to deploy a spring boot application 
 
-1. task_defintion.json 
+1. task_defintion.json -- this is the task definition aws is going to use to boot up tests on fargate 
+-- we provided placehold variables in the task defintion json 
 -- "essential:true" the purpose for this to be true because AWS treats and can have multiple container images running in the same task-defintion 
 --"essential:true" basically allows you to indicate to aws if anything goes wrong with any of these containers in the serice in this application, AWS can just take down the faulty one and boot up another one. 
 --"enviroment" we are going to pass a few enviroment applications to the strong-boot application 
     *so if anything you would like to passin like a spring profile or token name ect this is where you would pass it in 
 --"logConfigureation" is the cloudwatch logs 
+--
 
 2. now we are going to read the .json file as a template file in terraform and pass init it the variables we have created in the .json file as place holders, so that 
 task defintion JSOn can be resolved before pushed into the AWS as an actual definition 
 
+3. in the app.tf - we provided s3 backend and then we implemented remote state reading for our pla

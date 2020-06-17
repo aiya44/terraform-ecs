@@ -175,4 +175,7 @@ resource "aws_alb_listener_rule" "ecs_alb_listener_rule" {
 
 }
 
-#cloudwatch loggroup 
+#cloudwatch loggroup, log streams for these llog groups are going to be created aws itself. we dont have to create any log stream on our own  
+resource "aws_cloudwatch_log_group" "springbootapp_log_group" {
+    name = "${var.ecs_service_name}-LogGroup"
+}
